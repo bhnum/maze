@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "serve": "live-server",
+        "serve": "live-server --mount=/:./src",
         "lint": "eslint .",
         "format": "prettier -w ."
     },
