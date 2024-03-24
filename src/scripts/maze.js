@@ -1,20 +1,12 @@
+import { Direction } from './direction.js';
 import { Point } from './point.js';
-
-/**
- * Enum of 4 possible directions
- * @readonly
- * @enum {string}
- */
-export const Direction = {
-    UP: '↑',
-    DOWN: '↓',
-    LEFT: '←',
-    RIGHT: '→',
-};
+import { delay } from './utility.js';
 
 const wallAttributeName = 'data-wall';
 const startPointAttributeName = 'data-start';
 const endPointAttributeName = 'data-end';
+const validPointAttributeName = 'data-valid';
+const invalidPointAttributeName = 'data-invalid';
 
 export class Maze {
     #container;
@@ -29,6 +21,7 @@ export class Maze {
      * @type {Point}
      */
     #endPoint;
+    #pathShown = false;
 
     /**
      * @param {HTMLElement} container
@@ -65,6 +58,7 @@ export class Maze {
             );
         }
         this.#startPoint = value;
+        this.hidePath();
 
         if (value) {
             this.#setCellAttribute(value, startPointAttributeName, true);
@@ -86,6 +80,7 @@ export class Maze {
         }
 
         this.#endPoint = value;
+        this.hidePath();
 
         if (value) {
             this.#setCellAttribute(value, endPointAttributeName, true);
@@ -114,6 +109,7 @@ export class Maze {
         this.#walls[point.y][point.x] = isBlocked;
 
         this.#setCellAttribute(point, wallAttributeName, isBlocked);
+        this.hidePath();
     }
 
     /**
@@ -143,29 +139,42 @@ export class Maze {
         this.#container.oncontextmenu = (e) => e.preventDefault();
     }
 
+    #color;
+
     #createCellElement(point) {
         const cellElement = document.createElement('button');
 
         /**
-         * @param {MouseEvent} e
+         * @param {MouseEvent | TouchEvent} e
          */
         const drawEventHandler = (e) => {
-            if (e.buttons === 1) {
-                this.setBlocked(point, true);
-                this.save();
-            }
-            if (e.buttons === 2) {
-                this.setBlocked(point, false);
+            if (e instanceof TouchEvent || e.buttons === 1) {
+                this.setBlocked(point, this.#color);
                 this.save();
             }
         };
 
-        cellElement.onmousedown = drawEventHandler;
+        cellElement.onmousedown = (e) => {
+            this.#color = !this.isBlocked(point);
+            drawEventHandler(e);
+        };
         cellElement.onmouseenter = drawEventHandler;
+
+        cellElement.ontouchstart = (e) => {
+            this.#color = !this.isBlocked(point);
+            drawEventHandler(e);
+        };
+        cellElement.ontouchmove = drawEventHandler;
+        cellElement.ontouchend = () => this.setBlocked(point, !this.#color);
 
         return cellElement;
     }
 
+    /**
+     * @param {Point} point
+     * @param {string} attrName
+     * @param {any} attrValue
+     */
     #setCellAttribute(point, attrName, attrValue) {
         const node = this.#container.childNodes[point.y].childNodes[point.x];
 
@@ -261,5 +270,73 @@ export class Maze {
 
     get hasSaved() {
         return localStorage.getItem('maze') !== null;
+    }
+
+    /**
+     * @param {Direction[]} path
+     * @returns {Promise<'blocked' | 'endMissed' | 'endPassed' | 'loop' | 'valid'>}
+     */
+    async showPath(path) {
+        const wait = () => delay(0.02);
+        this.#pathShown = true;
+
+        this.#setCellAttribute(this.startPoint, validPointAttributeName, true);
+        await wait();
+
+        let point = this.startPoint;
+        let endReached = false;
+        const visited = [];
+
+        for (const dir of path) {
+            try {
+                point = point.move(dir);
+            } catch (e) {
+                this.#setCellAttribute(point, invalidPointAttributeName, true);
+                throw e;
+            }
+
+            if (this.isBlocked(point)) {
+                this.#setCellAttribute(point, invalidPointAttributeName, true);
+                return 'blocked';
+            }
+
+            if (visited.some((v) => point.equals(v))) {
+                this.#setCellAttribute(point, invalidPointAttributeName, true);
+                return 'loop';
+            }
+
+            if (this.endPoint.equals(point)) {
+                endReached = true;
+            }
+
+            visited.push(point);
+
+            this.#setCellAttribute(point, validPointAttributeName, true);
+            await wait();
+        }
+
+        if (this.endPoint.equals(point)) {
+            return 'valid';
+        }
+
+        this.#setCellAttribute(point, validPointAttributeName, false);
+        this.#setCellAttribute(point, invalidPointAttributeName, true);
+        await wait();
+
+        return endReached ? 'endPassed' : 'endMissed';
+    }
+
+    hidePath() {
+        if (!this.#pathShown) return;
+
+        for (let j = 0; j < this.height; j++) {
+            for (let i = 0; i < this.width; i++) {
+                const point = new Point(i, j);
+                this.#setCellAttribute(point, validPointAttributeName, false);
+                this.#setCellAttribute(point, invalidPointAttributeName, false);
+            }
+        }
+
+        this.#pathShown = false;
     }
 }

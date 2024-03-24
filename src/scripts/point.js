@@ -1,3 +1,5 @@
+import { Direction } from './direction.js';
+
 export class Point {
     /**
      * Creates a point from the provided coordinates
@@ -65,5 +67,25 @@ export class Point {
      */
     inBounds(width, height) {
         return this.x >= 0 && this.x < width && this.y >= 0 && this.y < height;
+    }
+
+    /**
+     * Returns the neighboring point on the provided direction
+     * @param {Direction} direction
+     * @returns {Point}
+     */
+    move(direction) {
+        switch (direction) {
+            case Direction.UP:
+                return this.up;
+            case Direction.DOWN:
+                return this.down;
+            case Direction.LEFT:
+                return this.left;
+            case Direction.RIGHT:
+                return this.right;
+        }
+
+        throw new Error(`Invalid direction ${direction}`);
     }
 }

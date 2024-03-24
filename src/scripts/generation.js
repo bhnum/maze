@@ -105,7 +105,7 @@ function generateInnerMaze(width, height, isBlocked, carve) {
         endPoint.neighbors.filter((n) => inMaze(n)).length !== 1 ||
         Math.abs(endPoint.x - startPoint.x) +
             Math.abs(endPoint.y - startPoint.y) <
-            (width + height) / 3
+            (width + height) / 2 - 2
     );
 
     return { startPoint, endPoint };

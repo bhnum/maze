@@ -1,5 +1,16 @@
 @import 'reset.css';
 
+.title {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+
+    > span {
+        transform: scaleX(3);
+        letter-spacing: 2;
+    }
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -16,6 +27,11 @@ body {
 
     @media (max-width: 800px) {
         max-width: 75vh;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        background: rgba(32, 32, 32);
+        color: white;
     }
 }
 
@@ -65,8 +81,8 @@ body {
             transition:
                 box-shadow 150ms,
                 transform 150ms,
-                border-color 50ms,
-                background-color 50ms;
+                border-color 100ms,
+                background-color 100ms;
 
             box-shadow:
                 rgba(0, 0, 0, 0.4) 0 0px 0px,
@@ -115,7 +131,69 @@ body {
                 background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="%23d04000"><path d="m291-208-83-83 189-189-189-189 83-83 189 189 189-189 83 83-189 189 189 189-83 83-189-189-189 189Z"/></svg>');
                 background-size: 100%;
             }
+
+            &[data-valid],
+            &[data-invalid] {
+                animation: bump 0.5s
+                    linear(
+                        0 0%,
+                        -0.07 5.15%,
+                        -0.12 12.79%,
+                        -0.04 21.03%,
+                        0.2 25.15%,
+                        0.39 26.91%,
+                        0.52 28.68%,
+                        0.59 31.62%,
+                        0.62 37.5%,
+                        0.59 42.79%,
+                        0.52 46.32%,
+                        0.4 47.5%,
+                        0.21 49.26%,
+                        0 54.56%,
+                        -0.05 62.21%,
+                        -0.02 72.79%,
+                        0.05 80.44%,
+                        0.01 88.68%,
+                        -0.01 91.56%,
+                        0 100%
+                    )
+                    1;
+            }
+
+            &[data-valid] {
+                background-color: rgba(0, 128, 0);
+                border-color: rgba(0, 112, 0);
+            }
+
+            &[data-invalid] {
+                background-color: rgba(208, 0, 0);
+                border-color: rgba(180, 0, 0);
+
+                &[data-wall] {
+                    box-shadow:
+                        rgba(0, 0, 0, 0.4) 0 0px 0px,
+                        rgba(208, 64, 64) 0 6px 0px;
+
+                    &:hover {
+                        box-shadow:
+                            rgba(0, 0, 0, 0.4) 0 4px 8px,
+                            rgba(208, 64, 64) 0 8px 0px;
+                    }
+                }
+            }
         }
+    }
+}
+
+@keyframes bump {
+    0% {
+        translate: 0 0;
+    }
+    99% {
+        translate: 0 -4px;
+    }
+    99.5% {
+        translate: 0 0;
     }
 }
 
@@ -187,6 +265,10 @@ body {
     }
 }
 
+.log-section:has(.log-container:empty) {
+    display: none;
+}
+
 .log-container {
     display: flex;
     flex-direction: column;
@@ -205,14 +287,16 @@ body {
     }
 
     .solution {
+        word-break: break-all;
         color: green;
     }
 
-    .output:has(+ .error:not(:empty)) .solution {
+    .output:has(+ .error) .solution {
         color: red;
     }
 
-    .error:not(:empty) {
+    .error {
+        overflow: auto;
         color: red;
     }
 }
