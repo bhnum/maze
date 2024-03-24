@@ -33,7 +33,6 @@ body {
 .maze {
     display: flex;
     flex-direction: column;
-    cursor: pointer;
 
     user-select: none;
     -webkit-user-select: none;
@@ -48,16 +47,20 @@ body {
         display: flex;
         flex-direction: row;
 
-        > div {
+        > button {
             flex-grow: 1;
             aspect-ratio: 1;
             touch-action: manipulation;
+            cursor: pointer;
 
             background-position: center;
             background-repeat: no-repeat;
+            background-size: 0%;
 
             background-color: rgba(208, 208, 255);
             border: 1px solid rgba(196, 196, 248);
+
+            will-change: border-color, box-shadow, background-color;
 
             transition:
                 box-shadow 150ms,
@@ -76,6 +79,16 @@ body {
                     rgba(208, 208, 255) 0 2px 0px;
             }
 
+            &:is(.generating *) {
+                transition:
+                    box-shadow 250ms,
+                    transform 250ms,
+                    background-size 250ms,
+                    border-color 50ms,
+                    background-color 50ms;
+                transition-delay: calc(var(--j) * 20ms + var(--i) * 2ms);
+            }
+
             &[data-wall] {
                 background-color: rgba(32, 32, 64);
                 border-color: rgba(32, 32, 64);
@@ -83,13 +96,13 @@ body {
                 transform: translateY(-6px);
                 box-shadow:
                     rgba(0, 0, 0, 0.4) 0 0px 0px,
-                    rgba(64, 64, 128) 0 6px 0px;
+                    rgba(96, 96, 160) 0 6px 0px;
 
                 &:hover {
                     transform: translateY(-8px);
                     box-shadow:
                         rgba(0, 0, 0, 0.4) 0 4px 8px,
-                        rgba(64, 64, 128) 0 8px 0px;
+                        rgba(96, 96, 160) 0 8px 0px;
                 }
             }
 
@@ -117,7 +130,7 @@ body {
     }
 }
 
-button {
+.button {
     align-items: center;
     appearance: none;
     background-color: #fcfcfd;

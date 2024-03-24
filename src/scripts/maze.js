@@ -127,16 +127,16 @@ export class Maze {
     initialize() {
         this.#container.innerHTML = '';
 
-        for (let row = 0; row < this.#height; row++) {
+        for (let j = 0; j < this.#height; j++) {
             const rowElement = document.createElement('div');
 
-            for (let col = 0; col < this.#width; col++) {
-                const cellElement = this.#createCellElement(
-                    new Point(col, row),
-                );
+            for (let i = 0; i < this.#width; i++) {
+                const cellElement = this.#createCellElement(new Point(i, j));
+                cellElement.style.setProperty('--i', i);
                 rowElement.appendChild(cellElement);
             }
 
+            rowElement.style.setProperty('--j', j);
             this.#container.appendChild(rowElement);
         }
 
@@ -144,7 +144,7 @@ export class Maze {
     }
 
     #createCellElement(point) {
-        const cellElement = document.createElement('div');
+        const cellElement = document.createElement('button');
 
         /**
          * @param {MouseEvent} e
