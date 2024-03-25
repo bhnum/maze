@@ -78,11 +78,11 @@ function solve(maze, point, visited, path) {
         return sol;
     }
 
-    if ((sol = solve(maze, point.right, visited, [...path, Direction.RIGHT]))) {
+    if ((sol = solve(maze, point.up, visited, [...path, Direction.UP]))) {
         return sol;
     }
 
-    if ((sol = solve(maze, point.up, visited, [...path, Direction.UP]))) {
+    if ((sol = solve(maze, point.right, visited, [...path, Direction.RIGHT]))) {
         return sol;
     }
 
