@@ -6,7 +6,7 @@
     font-weight: bold;
 
     > span {
-        transform: scaleX(3);
+        transform: perspective(5rem) rotateX(30deg) scale(3, 1.2);
         letter-spacing: 2;
     }
 }
@@ -132,42 +132,16 @@ body {
                 background-size: 100%;
             }
 
-            &[data-valid],
-            &[data-invalid] {
-                animation: bump 0.5s
-                    linear(
-                        0 0%,
-                        -0.07 5.15%,
-                        -0.12 12.79%,
-                        -0.04 21.03%,
-                        0.2 25.15%,
-                        0.39 26.91%,
-                        0.52 28.68%,
-                        0.59 31.62%,
-                        0.62 37.5%,
-                        0.59 42.79%,
-                        0.52 46.32%,
-                        0.4 47.5%,
-                        0.21 49.26%,
-                        0 54.56%,
-                        -0.05 62.21%,
-                        -0.02 72.79%,
-                        0.05 80.44%,
-                        0.01 88.68%,
-                        -0.01 91.56%,
-                        0 100%
-                    )
-                    1;
-            }
-
             &[data-valid] {
                 background-color: rgba(0, 128, 0);
                 border-color: rgba(0, 112, 0);
+                animation: bump 500ms ease-out 1;
             }
 
             &[data-invalid] {
                 background-color: rgba(208, 0, 0);
                 border-color: rgba(180, 0, 0);
+                animation: bump 500ms ease-out 1;
 
                 &[data-wall] {
                     box-shadow:
@@ -189,10 +163,34 @@ body {
     0% {
         translate: 0 0;
     }
-    99% {
+    10% {
+        translate: 0 8px;
+    }
+    20% {
+        translate: 0 0px;
+    }
+    40% {
+        translate: 0 -8px;
+    }
+    60% {
+        translate: 0 0px;
+    }
+    50% {
+        translate: 0 4px;
+    }
+    60% {
+        translate: 0 0px;
+    }
+    70% {
         translate: 0 -4px;
     }
-    99.5% {
+    80% {
+        translate: 0 0px;
+    }
+    90% {
+        translate: 0 -2px;
+    }
+    100% {
         translate: 0 0;
     }
 }
