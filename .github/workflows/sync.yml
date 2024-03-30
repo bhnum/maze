@@ -16,11 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Sync
-        uses: s0/git-publish-subdir-action@develop
+        uses: s0/git-publish-subdir-action@v2.6.0
         env:
           REPO: git@github.com:Star-Academy/codestar1403-frontend-assessment.git
           BRANCH: main
           FOLDER: .
-          TARGET_DIR: Maze
+          TARGET_DIR: Maze/design
+          MESSAGE: 'Update maze: {msg}'
           SSH_PRIVATE_KEY: ${{ secrets.SYNC_PRIVATE_KEY }}
           
