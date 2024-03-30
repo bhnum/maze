@@ -24,5 +24,5 @@ jobs:
           BRANCH: main
           FOLDER: .
           TARGET_DIR: Maze/design
-          MESSAGE: 'Update maze: {msg}'
+          MESSAGE: "Update maze to commit {sha} {msg}"
           SSH_PRIVATE_KEY: ${{ secrets.SYNC_PRIVATE_KEY }}
