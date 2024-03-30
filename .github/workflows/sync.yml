@@ -15,10 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Remove git history
-        run: rm -r ./.git
       - name: Sync
-        uses: s0/git-publish-subdir-action@5bc6742efb946f4cba68c7a9067a31ea5631071d
+        uses: s0/git-publish-subdir-action@v2.6.0
         env:
           REPO: git@github.com:Star-Academy/codestar1403-frontend-assessment.git
           BRANCH: main
