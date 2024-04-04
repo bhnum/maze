@@ -20,7 +20,7 @@ body {
     line-height: 1.2;
 
     margin: auto;
-    max-width: calc(75vh + 10rem);
+    max-width: calc(70vh + 10rem);
     font-size: 16px;
     padding: 2rem;
     gap: 2rem;
